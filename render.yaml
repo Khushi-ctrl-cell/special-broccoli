@@ -1,11 +1,23 @@
 services:
   - type: web
     name: green-quest
-    runtime: node
+    env: node
     region: oregon
-    buildCommand: npm install && cd client && npm install && npm run build && cd ../server && npm install && npm run build
-    startCommand: npm start
+    plan: free
+
+    buildCommand: |
+      npm install
+      cd client
+      npm install
+      npm run build
+      cd ../server
+      npm install
+      npx prisma generate
+
+    startCommand: cd server && npm start
+
     releaseCommand: cd server && npx prisma migrate deploy
+
     envVars:
       - key: NODE_ENV
         value: production
